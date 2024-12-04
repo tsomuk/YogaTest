@@ -12,20 +12,64 @@ struct MyPlanView: View {
     @StateObject var vm = MyPlanViewModel()
     
     var body: some View {
-        ZStack {
-            backgroundImage
-            
-            VStack {
-                Spacer()
-                title
-                Spacer()
-                SessionCardView()
-                    .padding(.horizontal, 40)
-                Spacer()
-                slider
-                Spacer()
+        GeometryReader { geo in
+            ZStack {
+                backgroundImage
+                
+                VStack {
+                    Spacer()
+                    title
+                    Spacer()
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 15) {
+                            ForEach(0..<vm.sessions.count, id: \.self) { index in
+                                SessionCardView(session: vm.sessions[index], sessionNumber: index + 1)
+                                    .frame(width: geo.size.width * 0.8)
+                                    .scrollTransition(axis: .horizontal) { content, phase in
+                                        content.scaleEffect(
+                                            x: phase.isIdentity ? 1 : 0.9,
+                                            y: phase.isIdentity ? 1 : 0.9
+                                        )
+                                    }
+                            }
+                        }
+                    }
+                    .contentMargins(.horizontal, 20)
+                    .scrollTargetBehavior(.paging)
+                    
+                    Spacer()
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(0..<vm.sessions.count, id: \.self) { index in
+                                Text("\(index + 1)")
+                                    .frame(width: 30)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(.white)
+                            }
+                        }
+                        .padding(.horizontal, geo.size.width / 2)
+                    }
+                    .frame(height: 50)
+                    .background(.black)
+                    .opacity(0.5)
+                    .overlay {
+                        Image("scroller_frame")
+                            .foregroundStyle(.white)
+                    }
+                    Spacer()
+                }
             }
-            
+        }
+        .onAppear {
+            vm.fetchSessions()
+        }
+        .alert("Title", isPresented: $vm.isShowingAlert) {
+            Button("OK") { print("OK") }
+            Button("Cancel") { print("Cancel") }
+        } message: {
+            Text("This is a message.")
         }
     }
 }
@@ -43,25 +87,26 @@ extension MyPlanView {
     }
     
     var title: some View {
-        VStack(spacing: 8) {
-            Text("My Plan".uppercased())
-                .fontWeight(.semibold)
-            Rectangle()
-                .frame(maxWidth: 90, maxHeight: 1)
-            Text("chapter 1".uppercased())
-            
-            Text("Sun Salutation Variation")
-                .fontWeight(.semibold)
-                .frame(maxWidth: 150)
-                .multilineTextAlignment(.center)
+        ZStack {
+            VStack(spacing: 8) {
+                Text("My Plan".uppercased())
+                    .fontWeight(.semibold)
+                Rectangle()
+                    .frame(maxWidth: 90, maxHeight: 1)
+                Text("chapter 1".uppercased())
+                
+                Text("Sun Salutation Variation")
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: 150)
+                    .multilineTextAlignment(.center)
+            }
+            Button {
+                vm.isShowingAlert = true
+            } label: {
+                Image(.planInfo)
+            }
+            .frame(maxWidth: .infinity, alignment: .topLeading)
         }
-            
-            .foregroundColor(.black)
-            .padding()
-    }
-    
-    var slider: some View {
-        Rectangle()
-            .frame(maxWidth: .infinity, maxHeight: 40)
+        .padding()
     }
 }

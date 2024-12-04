@@ -8,41 +8,54 @@
 import SwiftUI
 
 struct SessionCardView: View {
+    
+    let session: Session
+    let sessionNumber: Int
+    
     var body: some View {
         VStack(spacing: 0) {
-            Text("Session 4")
-                .font(.system(size: 23, weight: .semibold))
+            titleWithIcon
             
             separationLine
                 .padding(.vertical, 15)
             
             HStack(spacing: 20) {
-                Label("13 min", image: "session_duration")
-                Label("Medium", image: "intensity_2_dark")
+                Label("\(session.length) min", image: "session_duration")
+                Label("\(session.difficulty.rawValue)", image: session.difficulty.imageName)
             }
             
             quoteBlock
                 .padding(.top, 30)
             
             Button {
-                print("start")
+                print("did it")
             } label: {
                 didItButtonLabel
             }
             .padding(.top, 25)
         }
-        .padding(.horizontal)
-        .padding()
+        .frame(height: 350)
+        .padding(.horizontal, 10)
         .background(.white.opacity(0.9))
         .clipShape(.rect(cornerRadius: 15))
     }
 }
 
 #Preview {
-    MyPlanView()
+    SessionCardView(session: Session.mockSession, sessionNumber: 3)
 }
 
 extension SessionCardView {
+    var titleWithIcon: some View {
+        ZStack {
+            Text("Session \(sessionNumber)")
+                .font(.system(size: 23, weight: .semibold))
+            Image(systemName: "crown.fill")
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .foregroundStyle(.gray.opacity(0.6))
+        }
+    }
+    
     var separationLine: some View {
         Rectangle()
             .frame(maxWidth: .infinity)
@@ -52,11 +65,11 @@ extension SessionCardView {
     
     var quoteBlock: some View {
         VStack(spacing: 0) {
-            Text("\"He who says he can, and he who says he can't are both correct\"")
+            Text("\"\(session.quote)\"")
                 .multilineTextAlignment(.center)
                 .lineLimit(nil)
             
-            Text("Confucius")
+            Text("\(session.quoteAuthor)")
                 .padding(.top, 10)
         }
     }
