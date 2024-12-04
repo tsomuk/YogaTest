@@ -34,15 +34,19 @@ struct SessionCardView: View {
             }
             .padding(.top, 25)
         }
-        .frame(height: 350)
-        .padding(.horizontal, 10)
+        .padding(.horizontal, 20)
+        .frame(height: 300)
         .background(.white.opacity(0.9))
         .clipShape(.rect(cornerRadius: 15))
     }
 }
 
 #Preview {
-    SessionCardView(session: Session.mockSession, sessionNumber: 3)
+    ZStack {
+        Image(.chapter1Bg).resizable().ignoresSafeArea().scaledToFill()
+        SessionCardView(session: Session.mockSession, sessionNumber: 3)
+            .frame(maxHeight: 300)
+    }
 }
 
 extension SessionCardView {
@@ -77,7 +81,8 @@ extension SessionCardView {
     var didItButtonLabel: some View {
         Text("Did it")
             .foregroundStyle(.black)
-            .padding(.vertical, 20)
+            .fontWeight(.semibold)
+            .padding(.vertical, 15)
             .padding(.horizontal, 70)
             .background(.yogaCyan)
             .clipShape(.rect(cornerRadius: 40))

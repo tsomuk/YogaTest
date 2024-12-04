@@ -22,7 +22,7 @@ struct MyPlanView: View {
                     Spacer()
                     
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 15) {
+                        HStack(spacing: 0) {
                             ForEach(0..<vm.sessions.count, id: \.self) { index in
                                 SessionCardView(session: vm.sessions[index], sessionNumber: index + 1)
                                     .frame(width: geo.size.width * 0.8)
@@ -34,9 +34,10 @@ struct MyPlanView: View {
                                     }
                             }
                         }
+                        .scrollTargetLayout()
                     }
-                    .contentMargins(.horizontal, 20)
-                    .scrollTargetBehavior(.paging)
+                    .contentMargins(50, for: .scrollContent)
+                    .scrollTargetBehavior(.viewAligned)
                     
                     Spacer()
                     
