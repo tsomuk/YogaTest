@@ -12,6 +12,7 @@ struct YogaTestApp: App {
     var body: some Scene {
         WindowGroup {
             TabbarView()
+                .preferredColorScheme(.light)
         }
     }
 }

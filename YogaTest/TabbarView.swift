@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct TabbarView: View {
+    
+    init() {
+        UITabBar.appearance().backgroundColor = UIColor.yogaTabbar
+    }
+    
     var body: some View {
         TabView {
             MyPlanView()
